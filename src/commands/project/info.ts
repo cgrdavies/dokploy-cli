@@ -79,6 +79,7 @@ export default class ProjectInfo extends Command {
 				return;
 			}
 
+			this.log(chalk.green(`Project ID: ${projectInfo.projectId}`));
 			this.log(chalk.green(`Project Name: ${projectInfo.name}`));
 			this.log(
 				chalk.green(
@@ -97,11 +98,12 @@ export default class ProjectInfo extends Command {
 
 			if (projectInfo.environments && projectInfo.environments.length > 0) {
 				this.log(chalk.green(`Number of Environments: ${projectInfo.environments.length}`));
-				
+
 				// Mostrar información por environment
 				projectInfo.environments.forEach((env, envIndex) => {
 					this.log(chalk.blue(`\nEnvironment ${envIndex + 1}: ${env.name} (${env.description})`));
-					
+					this.log(chalk.blue(`  Environment ID: ${env.environmentId}`));
+
 					// Contar recursos por environment
 					const envApps = env.applications?.length || 0;
 					const envCompose = env.compose?.length || 0;
@@ -131,7 +133,15 @@ export default class ProjectInfo extends Command {
 					if (envApps > 0) {
 						this.log(chalk.cyan("    Applications:"));
 						env.applications.forEach((app, index) => {
-							this.log(`      ${index + 1}. ${app.name}`);
+							this.log(`      ${index + 1}. ${app.name} (ID: ${app.applicationId})`);
+						});
+					}
+
+					// Mostrar detalles de compose
+					if (envCompose > 0) {
+						this.log(chalk.cyan("    Compose Services:"));
+						env.compose.forEach((compose: any, index: number) => {
+							this.log(`      ${index + 1}. ${compose.name} (ID: ${compose.composeId})`);
 						});
 					}
 
@@ -139,35 +149,35 @@ export default class ProjectInfo extends Command {
 					if (envMariaDB > 0) {
 						this.log(chalk.cyan("    MariaDB Databases:"));
 						env.mariadb.forEach((db, index) => {
-							this.log(`      ${index + 1}. ${db.name}`);
+							this.log(`      ${index + 1}. ${db.name} (ID: ${db.mariadbId})`);
 						});
 					}
 
 					if (envMongoDB > 0) {
 						this.log(chalk.cyan("    MongoDB Databases:"));
 						env.mongo.forEach((db, index) => {
-							this.log(`      ${index + 1}. ${db.name}`);
+							this.log(`      ${index + 1}. ${db.name} (ID: ${db.mongoId})`);
 						});
 					}
 
 					if (envMySQL > 0) {
 						this.log(chalk.cyan("    MySQL Databases:"));
 						env.mysql.forEach((db, index) => {
-							this.log(`      ${index + 1}. ${db.name}`);
+							this.log(`      ${index + 1}. ${db.name} (ID: ${db.mysqlId})`);
 						});
 					}
 
 					if (envPostgreSQL > 0) {
 						this.log(chalk.cyan("    PostgreSQL Databases:"));
 						env.postgres.forEach((db, index) => {
-							this.log(`      ${index + 1}. ${db.name}`);
+							this.log(`      ${index + 1}. ${db.name} (ID: ${db.postgresId})`);
 						});
 					}
 
 					if (envRedis > 0) {
 						this.log(chalk.cyan("    Redis Databases:"));
 						env.redis.forEach((db, index) => {
-							this.log(`      ${index + 1}. ${db.name}`);
+							this.log(`      ${index + 1}. ${db.name} (ID: ${db.redisId})`);
 						});
 					}
 				});
@@ -176,7 +186,7 @@ export default class ProjectInfo extends Command {
 			}
 
 			// Mostrar totales
-			this.log(chalk.green.bold("\n📊 Project Totals:"));
+			this.log(chalk.green.bold("\nProject Totals:"));
 			this.log(chalk.green(`Total Applications: ${totalApplications}`));
 			this.log(chalk.green(`Total Compose Services: ${totalCompose}`));
 			this.log(chalk.green(`Total MariaDB Databases: ${totalMariaDB}`));

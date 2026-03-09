@@ -23,20 +23,23 @@ export default class ProjectList extends Command {
 			} else {
 				this.log(chalk.green("Projects:"));
 				const table = new Table({
-					colWidths: [10, 30, 50],
+					colWidths: [5, 40, 25, 40],
 					head: [
-						chalk.cyan("Index"),
+						chalk.cyan("#"),
+						chalk.cyan("Project ID"),
 						chalk.cyan("Name"),
 						chalk.cyan("Description"),
 					],
 				});
-				const index = 1;
+				let index = 1;
 				for (const project of projects) {
 					table.push([
-						chalk.white(index + 1),
+						chalk.white(index),
+						chalk.white(project.projectId || ""),
 						chalk.white(project.name),
 						chalk.gray(project.description || "No description"),
 					]);
+					index++;
 				}
 
 				this.log(table.toString());
