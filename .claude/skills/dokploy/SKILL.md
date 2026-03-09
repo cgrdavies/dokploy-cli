@@ -13,18 +13,37 @@ Dokploy is our self-hosted PaaS at `https://admin.yeeted.lol`. All services are 
 
 ### Authentication
 
-The CLI reads auth from env vars first, then falls back to `config.json`. Prefer env vars for scripted use:
+Before using any command, the CLI must be authenticated. First check if auth is already configured:
 
+```bash
+dokploy verify
+```
+
+If that fails, the user needs an API token. Guide them through it:
+
+1. Open the Dokploy API token page in their browser:
+   ```bash
+   open https://admin.yeeted.lol/settings/profile
+   ```
+   Tell the user to scroll to the **API/CLI** section and generate or copy their API token.
+
+2. Once they have the token, authenticate:
+   ```bash
+   dokploy authenticate -u https://admin.yeeted.lol -t <token>
+   ```
+
+3. Verify it works:
+   ```bash
+   dokploy verify
+   ```
+
+Alternatively, auth can be set via environment variables (useful for CI or env-based config):
 ```bash
 export DOKPLOY_URL=https://admin.yeeted.lol
 export DOKPLOY_AUTH_TOKEN=<token>
 ```
 
-Or authenticate once (saves to config.json):
-```bash
-dokploy authenticate -u https://admin.yeeted.lol -t <token>
-dokploy verify  # confirm auth works (no prompts)
-```
+The CLI checks env vars first, then falls back to `config.json`.
 
 ### Discovering IDs (Critical for Non-Interactive Use)
 
