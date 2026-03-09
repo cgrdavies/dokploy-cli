@@ -21,6 +21,12 @@ export type Database = {
 	// Add other database properties as needed
 };
 
+export type Compose = {
+	composeId: string;
+	name: string;
+	// Add other compose properties as needed
+};
+
 export type Environment = {
 	name: string;
 	environmentId: string;
@@ -34,7 +40,7 @@ export type Environment = {
 	mysql: Database[];
 	postgres: Database[];
 	redis: Database[];
-	compose: any[];
+	compose: Compose[];
 };
 
 export type Project = {
