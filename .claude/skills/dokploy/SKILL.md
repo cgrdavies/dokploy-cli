@@ -146,6 +146,12 @@ dokploy compose deploy -p <projectId> -e <environmentId> -c <composeId> -y
 dokploy compose stop -p <projectId> -e <environmentId> -c <composeId> -y
 dokploy compose delete -p <projectId> -e <environmentId> -c <composeId> -y
 dokploy compose delete -p <projectId> -e <environmentId> -c <composeId> --deleteVolumes -y
+
+# Configure deployment source (git, github, gitlab, bitbucket, gitea, raw)
+dokploy compose source -c <composeId> --sourceType git --customGitUrl git@gitea.yeeted.lol:Org/repo.git --customGitBranch main -y
+dokploy compose source -c <composeId> --sourceType gitea --giteaRepository my-repo --giteaOwner MyOrg --giteaBranch main --giteaId <id> -y
+dokploy compose source -c <composeId> --sourceType github --repository my-repo --owner my-org --branch main --githubId <id> -y
+dokploy compose source -c <composeId> --sourceType raw -y
 ```
 
 **Flags for `compose create`:**
@@ -175,6 +181,45 @@ dokploy compose delete -p <projectId> -e <environmentId> -c <composeId> --delete
 | `--composeId` | `-c` | Yes | Compose service ID |
 | `--deleteVolumes` | — | No | Also delete associated volumes |
 | `--skipConfirm` | `-y` | Yes | Skip confirmation |
+
+**Flags for `compose source`:**
+| Flag | Short | Required for non-interactive | Description |
+|------|-------|------------------------------|-------------|
+| `--composeId` | `-c` | Yes | Compose service ID |
+| `--sourceType` | `-s` | Yes | Source type: `git`, `github`, `gitlab`, `bitbucket`, `gitea`, `raw` |
+| `--skipConfirm` | `-y` | Yes | Skip confirmation |
+
+Source-type-specific flags (provide the ones matching your `--sourceType`):
+
+| Flag | Source Type | Description |
+|------|------------|-------------|
+| `--customGitUrl` | git | Git repository URL (e.g., `git@gitea.yeeted.lol:Org/repo.git`) |
+| `--customGitBranch` | git | Branch name |
+| `--customGitSSHKeyId` | git | SSH key ID for authentication |
+| `--repository` | github | Repository name |
+| `--owner` | github | Repository owner |
+| `--branch` | github | Branch name |
+| `--githubId` | github | GitHub integration ID |
+| `--gitlabRepository` | gitlab | Repository name |
+| `--gitlabOwner` | gitlab | Repository owner |
+| `--gitlabBranch` | gitlab | Branch name |
+| `--gitlabProjectId` | gitlab | GitLab project ID |
+| `--gitlabId` | gitlab | GitLab integration ID |
+| `--bitbucketRepository` | bitbucket | Repository name |
+| `--bitbucketOwner` | bitbucket | Repository owner |
+| `--bitbucketBranch` | bitbucket | Branch name |
+| `--bitbucketId` | bitbucket | Bitbucket integration ID |
+| `--giteaRepository` | gitea | Repository name |
+| `--giteaOwner` | gitea | Repository owner |
+| `--giteaBranch` | gitea | Branch name |
+| `--giteaId` | gitea | Gitea integration ID |
+
+Common optional flags (all source types):
+
+| Flag | Description |
+|------|-------------|
+| `--composePath` | Path to compose file (default: `./docker-compose.yml`) |
+| `--[no-]autoDeploy` | Enable/disable auto-deploy on push |
 
 ### Environment Variables
 
@@ -361,7 +406,24 @@ tea repo create --name my-service --owner Shopped --private
 tea repo create --name my-service --private
 ```
 
-### Dokploy app configuration
+### Configure deployment source via CLI
+
+After creating a compose service, configure its source to deploy from a Gitea repo:
+
+```bash
+# Set source to a Gitea repository
+dokploy compose source -c <composeId> \
+  --sourceType git \
+  --customGitUrl git@gitea.yeeted.lol:<owner>/<repo>.git \
+  --customGitBranch main \
+  --composePath ./docker-compose.yml \
+  -y
+
+# Or set to raw (inline compose file, no git source)
+dokploy compose source -c <composeId> --sourceType raw -y
+```
+
+### Dokploy app configuration (dashboard alternative)
 
 When configuring an application in Dokploy (via dashboard):
 
